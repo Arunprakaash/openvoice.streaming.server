@@ -1,3 +1,3 @@
 [submodule "ext/OpenVoice"]
 	path = ext/OpenVoice
-	url = tps://github.com/myshell-ai/OpenVoice.git
+	url = https://github.com/myshell-ai/OpenVoice.git
