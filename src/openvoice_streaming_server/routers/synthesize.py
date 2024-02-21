@@ -4,12 +4,12 @@ import torch
 from fastapi import WebSocket, APIRouter
 from starlette.websockets import WebSocketDisconnect
 
-from src.openvoice_streaming_server.openvoice import StreamingBaseSpeakerTTS
+from openvoice_streaming_server.openvoice_stream import StreamingBaseSpeakerTTS
 
 router = APIRouter()
 
-en_checkpoint_base = "./checkpoints/base_speakers/EN"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+en_checkpoint_base = "checkpoints/base_speakers/EN"
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 # Load models and resources
 en_base_speaker_tts = StreamingBaseSpeakerTTS(f'{en_checkpoint_base}/config.json', device=device)

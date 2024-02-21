@@ -2,7 +2,7 @@ import re
 
 import torch
 
-from ext.OpenVoice.api import BaseSpeakerTTS
+from openvoice.api import BaseSpeakerTTS
 
 
 class StreamingBaseSpeakerTTS(BaseSpeakerTTS):
