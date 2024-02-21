@@ -8,7 +8,19 @@ packages = [{include = "openvoice"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+fastapi = "^0.109.2"
+torch = {version = "^2.2.0", source = "pytorch-cu118", markers = "extra =='cuda'"}
+torchvision = {version = "^0.17.0", source = "pytorch-cu118", markers = "extra =='cuda'"}
+torchaudio = {version = "^2.2.0", source = "pytorch-cu118", markers = "extra =='cuda'"}
+librosa = "0.9.1"
 
+[tool.poetry.extras]
+cuda = []
+
+[[tool.poetry.source]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core"]
