@@ -1,0 +1,3 @@
+[submodule "OpenVoice"]
+	path = ext/OpenVoice
+	url = https://github.com/myshell-ai/OpenVoice.git

@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "openvoice-streaming-server"
+version = "0.1.0"
+description = ""
+authors = ["Arun <prakaasharun50@gmail.com>"]
+readme = "README.md"
+packages = [{include = "openvoice"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
