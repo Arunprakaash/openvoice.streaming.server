@@ -1,34 +1,9 @@
-"""
-This module provides a WebSocket-based API for real-time text-to-speech synthesis.
-
-Classes:
-    WebSocketHandler: Handles WebSocket connections and text synthesis requests.
-Functions:
-    synthesize: WebSocket route for initiating text synthesis.
-
-Usage:
-    1. Initialize WebSocketHandler with a TTS model.
-    2. Connect to the "/synthesize" route using a WebSocket client.
-    3. Send JSON data with text, speaker, language, and speed information to initiate synthesis.
-    4. Receive synthesized audio stream in real-time.
-
-Example:
-    WebSocket client sends JSON data:
-        {
-            "text": "Hello, how are you?",
-            "speaker": "default",
-            "language": "english",
-            "speed": 1.0
-        }
-    WebSocket server responds with audio stream synthesized from the text input.
-"""
-
-import json
 import logging
 import torch
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from openvoice_streaming_server.openvoice_stream import StreamingBaseSpeakerTTS
+from openvoice_streaming_server.core.libs import StreamingBaseSpeakerTTS
+from openvoice_streaming_server.core.schemas import SynthesisRequest, SynthesisResponse
 
 router = APIRouter()
 
@@ -43,7 +18,8 @@ logger.addHandler(stream_handler)
 async def send_audio_stream(websocket: WebSocket, audio_stream):
     try:
         async for audio_chunk in audio_stream:
-            await websocket.send_bytes(audio_chunk)
+            response = SynthesisResponse(audio_chunk=audio_chunk)
+            await websocket.send_bytes(response.audio_chunk)
     except WebSocketDisconnect:
         pass
 
@@ -66,11 +42,11 @@ class WebSocketHandler:
         try:
             while True:
                 data = await websocket.receive_text()
-                data = json.loads(data)
-                text = data.get("text")
-                speaker = data.get('speaker', 'default')
-                language = data.get('language', 'english')
-                speed = data.get('speed', 1.0)
+                request = SynthesisRequest.parse_raw(data)
+                text = request.text
+                speaker = request.speaker
+                language = request.language
+                speed = request.speed
                 logger.info(f"Received text: {text}, speaker: {speaker}, language: {language}, speed: {speed}")
                 audio_stream = self.model.tts_stream(text, speaker, language, speed)
                 await send_audio_stream(websocket, audio_stream)
@@ -81,7 +57,7 @@ class WebSocketHandler:
             await self.disconnect(websocket)
 
 
-en_checkpoint_base = "../checkpoints/base_speakers/EN"
+en_checkpoint_base = "../resources/checkpoints/base_speakers/EN"
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 # Load models and resources
