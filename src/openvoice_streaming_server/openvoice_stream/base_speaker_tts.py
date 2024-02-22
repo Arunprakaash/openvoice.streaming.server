@@ -1,5 +1,4 @@
 import re
-
 import torch
 
 from openvoice.api import BaseSpeakerTTS
