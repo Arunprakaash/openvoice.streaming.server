@@ -16,7 +16,7 @@ async def stream(audio_stream):
 
 
 async def synthesize_text(text):
-    uri = "ws://localhost:8000/v1/synthesize"
+    uri = "ws://localhost:8000/v1/api/synthesize"
 
     async with websockets.connect(uri, max_size=None) as websocket:
 
