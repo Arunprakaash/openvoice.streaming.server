@@ -1,6 +1,7 @@
 import logging
 import torch
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from starlette.websockets import WebSocketState
 
 from openvoice_streaming_server.core.libs import StreamingBaseSpeakerTTS
 from openvoice_streaming_server.core.schemas import SynthesisRequest, SynthesisResponse
@@ -34,8 +35,9 @@ class WebSocketHandler:
         self.connections.add(websocket)
 
     async def disconnect(self, websocket: WebSocket):
-        await websocket.close()
-        self.connections.remove(websocket)
+        if websocket.client_state != WebSocketState.DISCONNECTED:
+            await websocket.close()
+            self.connections.remove(websocket)
 
     async def handle_websocket(self, websocket: WebSocket):
         await self.connect(websocket)
@@ -43,6 +45,9 @@ class WebSocketHandler:
             while True:
                 data = await websocket.receive_text()
                 request = SynthesisRequest.parse_raw(data)
+                if request.text == "":
+                    await self.disconnect(websocket)
+                    return
                 text = request.text
                 speaker = request.speaker
                 language = request.language
