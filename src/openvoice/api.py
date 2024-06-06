@@ -35,8 +35,6 @@ class OpenVoiceBaseClass(object):
     def load_ckpt(self, ckpt_path):
         checkpoint_dict = torch.load(ckpt_path, map_location=torch.device(self.device))
         a, b = self.model.load_state_dict(checkpoint_dict['model'], strict=False)
-        print("Loaded checkpoint '{}'".format(ckpt_path))
-        print('missing/unexpected keys:', a, b)
 
 
 class BaseSpeakerTTS(OpenVoiceBaseClass):
@@ -65,9 +63,6 @@ class BaseSpeakerTTS(OpenVoiceBaseClass):
     @staticmethod
     def split_sentences_into_pieces(text, language_str):
         texts = utils.split_sentence(text, language_str=language_str)
-        print(" > Text splitted to sentences.")
-        print('\n'.join(texts))
-        print(" > ===========================")
         return texts
 
     def tts(self, text, output_path, speaker, language='English', speed=1.0):

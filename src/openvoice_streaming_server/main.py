@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from v1.api import api_router
+from openvoice_streaming_server.v1.api import api_router
 
 app = FastAPI()
 

@@ -86,10 +86,12 @@ def split_sentences_latin(text, min_len=10):
     """Split Long sentences into list of short ones
 
     Args:
-        str: Input sentences.
+        text: Input sentences.
 
     Returns:
         List[str]: list of output sentences.
+        :param text:
+        :param min_len:
     """
     # deal with dirty sentences
     text = re.sub('[。！？；]', '.', text)
